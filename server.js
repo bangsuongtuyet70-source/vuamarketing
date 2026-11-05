@@ -6,18 +6,17 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Bộ nhớ tạm trên Server (lưu danh sách link và cấu hình)
+// Bộ nhớ tạm trên Server
 let savedLinks = [];
 let savedConfig = { token: '' };
 
-// Dữ liệu mẫu comments
 let commentsData = [
     { id: 1, time: "21:04:04 24/10/2026", post: "Nhà đẹp Betoviet", name: "Thanh Truong", comment: "Nhà của tôi", phone: null },
     { id: 2, time: "17:59:56 24/10/2026", post: "Nhà Đẹp Miền Bắc", name: "Ngọc Than", comment: "Xin tư vấn giá sặt 0917751295", phone: "0917751295" }
 ];
 
 // API lấy danh sách link đã lưu
-- app.get('/api/links', (req, res) => {
+app.get('/api/links', (req, res) => {
     res.json(savedLinks);
 });
 
@@ -25,7 +24,7 @@ let commentsData = [
 app.post('/api/add-links', (req, res) => {
     const { links } = req.body;
     if (links && Array.isArray(links)) {
-        savedLinks = links; // Lưu vào bộ nhớ server
+        savedLinks = links;
     }
     res.json({ success: true, totalLinks: savedLinks.length });
 });
