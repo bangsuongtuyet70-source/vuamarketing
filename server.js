@@ -39,7 +39,7 @@ function getFormattedDate() {
     return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
-// Giao diện HTML hiển thị trực tiếp từ server, không sợ lỗi mất file
+// Giao diện HTML hiển thị trực tiếp từ server
 app.get('/', (req, res) => {
     res.send(`
         <!DOCTYPE html>
@@ -132,23 +132,23 @@ app.get('/', (req, res) => {
                     document.getElementById('tab-' + name).classList.remove('hidden');
                 }
                 async function loadComments() {
-                    const res = await fetch(\`\${API_BASE_URL}/api/comments\`);
+                    const res = await fetch(`${API_BASE_URL}/api/comments`);
                     const data = await res.json();
                     const tbody = document.getElementById('commentTableBody');
                     document.getElementById('commentCount').innerText = data.length + " comment";
                     tbody.innerHTML = '';
                     data.forEach((item, index) => {
-                        tbody.innerHTML += \`
+                        tbody.innerHTML += `
                             <tr>
-                                <td class="p-3">\${index + 1}</td>
-                                <td class="p-3 text-xs text-gray-500">\${item.time}</td>
-                                <td class="p-3"><a href="\${item.postUrl}" target="_blank" class="text-blue-600 underline font-semibold">\${item.post}</a></td>
-                                <td class="p-3"><a href="\${item.profileUrl}" target="_blank" class="text-blue-600 underline font-semibold">\${item.name} 👤</a></td>
-                                <td class="p-3">\${item.comment}</td>
-                                <td class="p-3 font-bold text-blue-600">\${item.phone || '-'}</td>
+                                <td class="p-3">${index + 1}</td>
+                                <td class="p-3 text-xs text-gray-500">${item.time}</td>
+                                <td class="p-3"><a href="${item.postUrl}" target="_blank" class="text-blue-600 underline font-semibold">${item.post}</a></td>
+                                <td class="p-3"><a href="${item.profileUrl}" target="_blank" class="text-blue-600 underline font-semibold">${item.name} 👤</a></td>
+                                <td class="p-3">${item.comment}</td>
+                                <td class="p-3 font-bold text-blue-600">${item.phone || '-'}</td>
                                 <td class="p-3"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Chưa đặt</span></td>
                             </tr>
-                        \`;
+                        `;
                     });
                 }
                 async function submitManualComment() {
@@ -159,7 +159,7 @@ app.get('/', (req, res) => {
                     const comment = document.getElementById('inputCommentText').value;
                     const phone = document.getElementById('inputPhone').value;
                     if(!name || !comment) return alert('Nhập tên và nội dung!');
-                    await fetch(\`\${API_BASE_URL}/api/add-comment\`, {
+                    await fetch(`${API_BASE_URL}/api/add-comment`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ post, postUrl, name, profileUrl, comment, phone })
@@ -183,12 +183,9 @@ app.get('/api/comments', (req, res) => {
 app.post('/api/add-comment', (req, res) => {
     const { post, postUrl, name, profileUrl, comment, phone } = req.body;
     const db = readData();
-    const d = new Date();
-    const pad = (n) => n.toString().padStart(2, '0');
-    const timeStr = \`\${pad(d.getHours())}:\${pad(d.getMinutes())}:\${pad(d.getSeconds())} \${pad(d.getDate())}/\${pad(d.getMonth() + 1)}/\${d.getFullYear()}\`;
     
     db.comments.unshift({
-        time: timeStr,
+        time: getFormattedDate(),
         post: post || "Bài viết Facebook",
         postUrl: postUrl || "https://www.facebook.com",
         name: name || "Khách",
