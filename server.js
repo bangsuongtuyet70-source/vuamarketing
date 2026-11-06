@@ -48,17 +48,16 @@ const sampleComments = [
     { text: "Nhà này chi phí thiết kế bao nhiêu ad?", phone: null },
     { text: "Báo giá cho tôi qua SĐT 0917751295 nhé", phone: "0917751295" },
     { text: "Mẫu này đẹp quá, cho mình xin tư vấn", phone: null },
-    { text: "Cần tư vấn thi công trọn gói zalo 0988123456", phone: "0988123456" },
-    { text: "Gọi lại tư vấn giúp em sđt 0905678910", phone: "0905678910" }
+    { text: "Cần tư vấn thi công trọn gói zalo 0988123456", phone: "0988123456" }
 ];
 
 function getFormattedDate() {
     const d = new Date();
     const pad = (n) => n.toString().padStart(2, '0');
-    return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
-// Xóa file database.json cũ đi để hệ thống sinh lại dữ liệu chuẩn mới nhất
+// Chạy ngầm tự động sinh comment mô phỏng kèm link chuẩn xác
 setInterval(() => {
     const db = readData();
     if (db.links && db.links.length > 0) {
@@ -105,5 +104,5 @@ app.get('/api/comments', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server chạy tại cổng ${PORT}`);
+    console.log(`Server Backend đang chạy tại cổng ${PORT}`);
 });
