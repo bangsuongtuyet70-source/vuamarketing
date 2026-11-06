@@ -43,7 +43,6 @@
             </header>
             <div class="bg-white p-6 rounded shadow-sm border space-y-4">
                 <textarea id="linkInputArea" rows="6" placeholder="Dán danh sách link bài viết / video / reel Facebook vào đây (mỗi link một dòng)..." class="w-full border rounded p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
-                <p class="text-xs text-gray-500 font-medium">Hệ thống sẽ tự động theo dõi ngầm danh sách link bài viết bạn đã thêm.</p>
             </div>
         </div>
 
@@ -239,7 +238,6 @@
             }
         }
 
-        // Hàm thêm link đã được khôi phục đầy đủ
         async function addLinks() {
             const text = document.getElementById('linkInputArea').value;
             const links = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
