@@ -207,7 +207,6 @@
                 data.forEach((item, index) => {
                     const phoneDisplay = item.phone ? `<span class="text-blue-600 font-bold">${item.phone}</span>` : `<span class="text-gray-400">-</span>`;
                     
-                    // Gắn trực tiếp link chuẩn tuyệt đối từ database của đúng khách & đúng bài viết đó
                     const postLink = item.postUrl || 'https://www.facebook.com';
                     const profileLink = item.profileUrl || 'https://www.facebook.com';
 
@@ -291,6 +290,17 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        async function saveConfig() {
+            const token = document.getElementById('tokenInput').value;
+            const res = await fetch(`${API_BASE_URL}/api/save-config`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+            });
+            const result = await res.json();
+            alert(result.message);
         }
 
         window.onload = function() {
