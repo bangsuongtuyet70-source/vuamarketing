@@ -39,6 +39,11 @@ function getFormattedDate() {
     return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
+// === QUAN TRỌNG: Phục vụ file index.html khi truy cập trang chủ ===
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // API quản lý Link
 app.get('/api/links', (req, res) => {
     const db = readData();
@@ -77,7 +82,7 @@ app.post('/api/add-comment', (req, res) => {
         createdAt: new Date()
     };
 
-    db.comments.unshift(newComment); // Đẩy comment mới nhất lên đầu tiên tuyệt đối
+    db.comments.unshift(newComment);
     if (db.comments.length > 500) db.comments.pop();
 
     writeData(db);
