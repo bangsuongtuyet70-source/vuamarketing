@@ -34,18 +34,14 @@ function writeData(data) {
 }
 
 const samplePosts = [
-    { title: "Nhà đẹp Betoviet", url: "https://www.facebook.com/reel/901547732295975" },
-    { title: "Nhà Đẹp Miền Bắc", url: "https://www.facebook.com/watch/?v=123456789" },
-    { title: "Thiết Kế Biệt Thự Neoclassic", url: "https://www.facebook.com/permalink.php?story_fbid=1" },
-    { title: "Kiến Trúc Nhà Á Châu", url: "https://www.facebook.com/permalink.php?story_fbid=2" }
+    { title: "Thiết Kế Nhà An Phát", url: "https://www.facebook.com/reel/901547732295975" },
+    { title: "Mộng Hoa Studio", url: "https://www.facebook.com/reel/1151519667546233" }
 ];
 
 const sampleCustomers = [
     { name: "Oanh Mai", profileUrl: "https://www.facebook.com/oanh.mai.326683" },
     { name: "Tuyến KoMi", profileUrl: "https://www.facebook.com/tuyen.komi" },
-    { name: "Nam Tran Cong", profileUrl: "https://www.facebook.com/nam.trancong" },
-    { name: "Minh Hoàng", profileUrl: "https://www.facebook.com/minh.hoang" },
-    { name: "Thu Hà", profileUrl: "https://www.facebook.com/thuha.nd" }
+    { name: "Nam Tran Cong", profileUrl: "https://www.facebook.com/nam.trancong" }
 ];
 
 const sampleComments = [
