@@ -9,10 +9,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Đường dẫn file lưu dữ liệu trên server
 const DATA_FILE = path.join(__dirname, 'database.json');
 
-// Hàm đọc/ghi dữ liệu an toàn
 function readData() {
     try {
         if (!fs.existsSync(DATA_FILE)) {
@@ -35,15 +33,19 @@ function writeData(data) {
     }
 }
 
-// Dữ liệu mẫu tự động chạy ngầm
 const samplePosts = [
-    "Nhà đẹp Betoviet", "Nhà Đẹp Miền Bắc", "Thiết Kế Biệt Thự Neoclassic", 
-    "Kiến Trúc Nhà Á Châu", "Mẫu Biệt Thự VIP", "Nhà Mái Thái Hiện Đại"
+    { title: "Nhà đẹp Betoviet", url: "https://www.facebook.com/reel/901547732295975" },
+    { title: "Nhà Đẹp Miền Bắc", url: "https://www.facebook.com/watch/?v=123456789" },
+    { title: "Thiết Kế Biệt Thự Neoclassic", url: "https://www.facebook.com/permalink.php?story_fbid=1" },
+    { title: "Kiến Trúc Nhà Á Châu", url: "https://www.facebook.com/permalink.php?story_fbid=2" }
 ];
 
-const sampleNames = [
-    "Thanh Truong", "Ngọc Than", "Minh Hoàng", "Thu Hà", "Trần Văn Nam", 
-    "Phạm Hải", "Đăng Khoa", "Nguyễn Thùy Linh", "Lê Văn Tùng", "Hoàng Kim Yến"
+const sampleCustomers = [
+    { name: "Oanh Mai", profileUrl: "https://www.facebook.com/oanh.mai.326683" },
+    { name: "Tuyến KoMi", profileUrl: "https://www.facebook.com/tuyen.komi" },
+    { name: "Nam Tran Cong", profileUrl: "https://www.facebook.com/nam.trancong" },
+    { name: "Minh Hoàng", profileUrl: "https://www.facebook.com/minh.hoang" },
+    { name: "Thu Hà", profileUrl: "https://www.facebook.com/thuha.nd" }
 ];
 
 const sampleComments = [
@@ -51,10 +53,7 @@ const sampleComments = [
     { text: "Báo giá cho tôi qua SĐT 0917751295 nhé", phone: "0917751295" },
     { text: "Mẫu này đẹp quá, cho mình xin tư vấn", phone: null },
     { text: "Cần tư vấn thi công trọn gói zalo 0988123456", phone: "0988123456" },
-    { text: "Địa chỉ văn phòng mình ở đâu vậy?", phone: null },
-    { text: "Gọi lại tư vấn giúp em sđt 0905678910", phone: "0905678910" },
-    { text: "Thi công hết bao nhiêu tiền vậy anh?", phone: null },
-    { text: "Tư vấn thiết kế biệt thự 3 tầng 0912345678", phone: "0912345678" }
+    { text: "Gọi lại tư vấn giúp em sđt 0905678910", phone: "0905678910" }
 ];
 
 function getFormattedDate() {
@@ -63,32 +62,34 @@ function getFormattedDate() {
     return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
-// 📌 Tiến trình chạy ngầm mỗi 10 giây sinh comment tự động
+// Chạy ngầm tự động sinh comment mô phỏng kèm link thật
 setInterval(() => {
     const db = readData();
     if (db.links && db.links.length > 0) {
-        const randomPost = samplePosts[Math.floor(Math.random() * samplePosts.length)];
-        const randomName = sampleNames[Math.floor(Math.random() * sampleNames.length)];
+        const randomPostObj = samplePosts[Math.floor(Math.random() * samplePosts.length)];
+        const randomCustomer = sampleCustomers[Math.floor(Math.random() * sampleCustomers.length)];
         const randomCommentObj = sampleComments[Math.floor(Math.random() * sampleComments.length)];
 
         const newComment = {
             time: getFormattedDate(),
-            post: randomPost,
-            name: randomName,
+            post: randomPostObj.title,
+            postUrl: randomPostObj.url,
+            name: randomCustomer.name,
+            profileUrl: randomCustomer.profileUrl,
             comment: randomCommentObj.text,
             phone: randomCommentObj.phone,
             createdAt: new Date()
         };
 
-        db.comments.unshift(newComment); // Thêm lên đầu
-        if (db.comments.length > 300) db.comments.pop(); // Giới hạn 300 comment
+        db.comments.unshift(newComment);
+        if (db.comments.length > 300) db.comments.pop();
 
         writeData(db);
         console.log(`[Chạy ngầm] Đã lưu 1 comment mới vào file!`);
     }
 }, 10000);
 
-// 📌 Các API chính
+// API Routes
 app.get('/api/links', (req, res) => {
     const db = readData();
     res.json(db.links || []);
@@ -98,7 +99,7 @@ app.post('/api/add-links', (req, res) => {
     const { links } = req.body;
     const db = readData();
     if (links && Array.isArray(links)) {
-        db.links = links; // Cập nhật danh sách link mới
+        db.links = links;
         writeData(db);
     }
     res.json({ success: true, totalLinks: db.links.length });
@@ -117,5 +118,5 @@ app.post('/api/save-config', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server Backend Vua Marketing đang chạy tại cổng ${PORT} (Sử dụng Local Storage)`);
+    console.log(`Server Backend Vua Marketing đang chạy tại cổng ${PORT}`);
 });
