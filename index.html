@@ -49,12 +49,30 @@
         <!-- Tab 2: Comments -->
         <div id="tab-comments" class="tab-content flex-1 flex flex-col overflow-y-auto">
             <header class="bg-white border-b px-6 py-3 flex justify-between items-center shrink-0">
-                <h1 class="font-semibold text-gray-800">Comments & Lọc số điện thoại (Tự động cập nhật ngầm)</h1>
+                <h1 class="font-semibold text-gray-800">Quản lý Comments & Lọc số điện thoại</h1>
                 <span id="commentCount" class="text-sm text-blue-600 font-medium">0 comment</span>
             </header>
 
-            <div class="p-6">
-                <div class="bg-white p-4 rounded-lg shadow-sm border mb-4 flex items-center gap-4 text-sm">
+            <div class="p-6 space-y-4">
+                <!-- Form nhập comment thật trực tiếp -->
+                <div class="bg-white p-4 rounded-lg shadow-sm border">
+                    <h3 class="text-sm font-bold text-gray-700 mb-3">➕ Thêm nhanh comment thực tế từ Facebook:</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                        <input type="text" id="inputPostName" placeholder="Tên bài viết (VD: Nhà đẹp Betoviet)" class="border rounded px-3 py-1.5 text-sm">
+                        <input type="text" id="inputPostUrl" placeholder="Link bài viết gốc (URL Facebook)" class="border rounded px-3 py-1.5 text-sm">
+                        <input type="text" id="inputCustName" placeholder="Tên khách hàng (VD: Huệ Giếng Khoan)" class="border rounded px-3 py-1.5 text-sm">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <input type="text" id="inputProfileUrl" placeholder="Link trang cá nhân khách hàng" class="border rounded px-3 py-1.5 text-sm">
+                        <input type="text" id="inputCommentText" placeholder="Nội dung bình luận (VD: Đất 8*30, 130m...)" class="border rounded px-3 py-1.5 text-sm">
+                        <div class="flex gap-2">
+                            <input type="text" id="inputPhone" placeholder="Số điện thoại (nếu có)" class="border rounded px-3 py-1.5 text-sm flex-1">
+                            <button onclick="submitManualComment()" class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-blue-700 shrink-0">Thêm</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm border flex items-center gap-4 text-sm">
                     <input type="text" placeholder="Tìm kiếm nhanh..." class="border rounded px-3 py-1.5 w-60">
                     <button onclick="exportData()" class="bg-gray-100 px-3 py-1.5 rounded border hover:bg-gray-200 font-medium text-gray-700">Export Data</button>
                 </div>
@@ -238,6 +256,44 @@
             }
         }
 
+        async function submitManualComment() {
+            const post = document.getElementById('inputPostName').value.trim();
+            const postUrl = document.getElementById('inputPostUrl').value.trim();
+            const name = document.getElementById('inputCustName').value.trim();
+            const profileUrl = document.getElementById('inputProfileUrl').value.trim();
+            const comment = document.getElementById('inputCommentText').value.trim();
+            const phone = document.getElementById('inputPhone').value.trim();
+
+            if (!name || !comment) {
+                alert('Vui lòng nhập Tên khách hàng và Nội dung bình luận!');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/add-comment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ post, postUrl, name, profileUrl, comment, phone })
+                });
+                const result = await res.json();
+                if(result.success) {
+                    // Xóa form sau khi thêm thành công
+                    document.getElementById('inputCustName').value = '';
+                    document.getElementById('inputCommentText').value = '';
+                    document.getElementById('inputPhone').value = '';
+                    document.getElementById('inputProfileUrl').value = '';
+                    
+                    // Load lại bảng ngay lập tức để thấy comment mới chễm chệ trên đầu
+                    loadComments();
+                } else {
+                    alert('Có lỗi khi thêm comment!');
+                }
+            } catch(e) {
+                console.error(e);
+                alert('Không kết nối được tới server!');
+            }
+        }
+
         async function addLinks() {
             const text = document.getElementById('linkInputArea').value;
             const links = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
@@ -251,13 +307,13 @@
                 });
                 const result = await res.json();
                 if(result.success) {
-                    alert(`Đã lưu thành công ${result.totalLinks} link vào hệ thống chạy ngầm!`);
+                    alert(`Đã lưu thành công ${result.totalLinks} link!`);
                 } else {
                     alert('Có lỗi khi lưu link!');
                 }
             } catch (err) {
                 console.error(err);
-                alert('Không thể kết nối đến server để lưu link!');
+                alert('Không thể kết nối đến server!');
             }
         }
 
@@ -292,24 +348,9 @@
             document.body.removeChild(link);
         }
 
-        async function saveConfig() {
-            const token = document.getElementById('tokenInput').value;
-            const res = await fetch(`${API_BASE_URL}/api/save-config`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token })
-            });
-            const result = await res.json();
-            alert(result.message);
-        }
-
         window.onload = function() {
             loadComments();
             loadSavedLinks();
-
-            setInterval(() => {
-                loadComments();
-            }, 5000);
         };
     </script>
 </body>
