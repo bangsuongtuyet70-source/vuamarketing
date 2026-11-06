@@ -6,7 +6,7 @@
     <title>Vua Marketing - Quản lý Tương tác</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 flex h-screen overflow-hidden font-sans">
+<body class="bg-gray-50 flex h-screen overflow-hidden">
 
     <!-- Sidebar bên trái -->
     <aside class="w-64 bg-white border-r flex flex-col justify-between shrink-0">
@@ -14,20 +14,20 @@
             <div class="p-4 font-bold text-lg text-blue-600 border-b flex items-center gap-2">
                 <span>👑</span> VUA MARKETING
             </div>
-            <nav class="p-2 space-y-1 text-sm">
-                <div class="px-3 py-2 text-gray-700 font-semibold">📌 Cào bài viết Face...</div>
-                <div class="pl-3 space-y-1">
-                    <button onclick="switchTab('danh-sach')" id="btn-danh-sach" class="w-full text-left py-1.5 px-3 rounded text-gray-600 hover:bg-gray-100 font-medium">Danh sách</button>
-                    <button onclick="switchTab('comments')" id="btn-comments" class="w-full text-left py-1.5 px-3 rounded text-blue-600 font-semibold bg-blue-50">Comments</button>
-                    <button onclick="switchTab('orders')" id="btn-orders" class="w-full text-left py-1.5 px-3 rounded text-gray-600 hover:bg-gray-100 font-medium">Orders</button>
+            <nav class="p-2 space-y-1">
+                <div class="px-4 py-2 text-gray-400 font-medium text-xs uppercase tracking-wider">Cào bài viết Face...</div>
+                <div class="pl-2 space-y-1 text-sm">
+                    <button onclick="switchTab('danh-sach')" id="btn-danh-sach" class="w-full text-left py-2 px-3 rounded text-blue-600 font-semibold bg-blue-50">Danh sách</button>
+                    <button onclick="switchTab('comments')" id="btn-comments" class="w-full text-left py-2 px-3 rounded text-gray-600 hover:bg-gray-100 font-medium">Comments</button>
+                    <button onclick="switchTab('orders')" id="btn-orders" class="w-full text-left py-2 px-3 rounded text-gray-600 hover:bg-gray-100 font-medium">Orders</button>
                 </div>
-                <button onclick="switchTab('ads')" id="btn-ads" class="w-full text-left px-3 py-2.5 rounded text-gray-700 hover:bg-gray-100 font-medium mt-1">📊 Ads Library</button>
-                <button onclick="switchTab('tai-khoan')" id="btn-tai-khoan" class="w-full text-left px-3 py-2.5 rounded text-gray-700 hover:bg-gray-100 font-medium">👤 Tài khoản</button>
-                <button onclick="switchTab('nhan-vien')" id="btn-nhan-vien" class="w-full text-left px-3 py-2.5 rounded text-gray-700 hover:bg-gray-100 font-medium">⚙️ Quản lý nhân viên</button>
+                <button onclick="switchTab('ads')" id="btn-ads" class="w-full text-left px-4 py-2.5 rounded text-gray-700 hover:bg-gray-100 font-medium mt-2">📊 Ads Library</button>
+                <button onclick="switchTab('tai-khoan')" id="btn-tai-khoan" class="w-full text-left px-4 py-2.5 rounded text-gray-700 hover:bg-gray-100 font-medium">👤 Tài khoản</button>
+                <button onclick="switchTab('nhan-vien')" id="btn-nhan-vien" class="w-full text-left px-4 py-2.5 rounded text-gray-700 hover:bg-gray-100 font-medium">⚙️ Quản lý nhân viên</button>
             </nav>
         </div>
-        <div class="p-4 border-t flex items-center justify-between text-sm">
-            <span class="font-medium text-gray-700">thanhhai</span>
+        <div class="p-4 border-t flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-700">thanhhai</span>
             <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded font-bold">VIP</span>
         </div>
     </aside>
@@ -35,113 +35,97 @@
     <!-- Main Content -->
     <main class="flex-1 flex flex-col overflow-y-auto bg-gray-50">
         
-        <!-- TAB 1: DANH SÁCH LINK -->
-        <div id="tab-danh-sach" class="tab-content hidden p-6 space-y-4">
-            <header class="flex justify-between items-center bg-white p-4 rounded shadow-sm border">
-                <h1 class="font-semibold text-lg text-gray-800">Cào bài viết Facebook - Danh sách</h1>
+        <!-- Tab 1: Cào bài viết Facebook - Danh sách (Chuẩn 100% hình mẫu) -->
+        <div id="tab-danh-sach" class="tab-content flex-1 p-6 space-y-4">
+            <header class="bg-white p-4 rounded-lg shadow-sm border flex justify-between items-center">
+                <h1 class="font-bold text-lg text-gray-800">Cào bài viết Facebook - Danh sách</h1>
                 <div class="flex gap-2">
-                    <button class="bg-gray-100 border px-3 py-1.5 rounded text-xs font-medium hover:bg-gray-200">Export CSV</button>
-                    <button class="bg-gray-100 border px-3 py-1.5 rounded text-xs font-medium hover:bg-gray-200">Import CSV</button>
-                    <button onclick="openAddLinkModal()" class="bg-blue-600 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-blue-700">+ Thêm bài viết</button>
+                    <button onclick="exportCSV()" class="bg-gray-100 border px-3 py-1.5 rounded text-sm font-medium hover:bg-gray-200">Export CSV</button>
+                    <button class="bg-gray-100 border px-3 py-1.5 rounded text-sm font-medium hover:bg-gray-200">Import CSV</button>
+                    <button onclick="openAddModal()" class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-blue-700">+ Thêm bài viết</button>
                 </div>
             </header>
-            
-            <div class="bg-white p-4 rounded shadow-sm border text-sm flex justify-between items-center">
-                <span class="text-gray-600 font-medium">Tổng số bài viết: <strong id="totalLinksCount">4</strong></span>
-                <div class="flex gap-2">
-                    <button class="px-3 py-1 text-xs border-b-2 border-blue-600 font-bold text-blue-600">Link on</button>
-                    <button class="px-3 py-1 text-xs text-gray-500 hover:text-gray-800">Link off</button>
-                </div>
-            </div>
 
-            <div class="bg-white rounded shadow-sm border overflow-hidden">
-                <table class="w-full text-left border-collapse text-sm">
-                    <thead>
-                        <tr class="border-b bg-gray-50 text-xs text-gray-500 uppercase">
-                            <th class="p-3"><input type="checkbox"></th>
-                            <th class="p-3">Thời gian thêm link</th>
-                            <th class="p-3">Data</th>
-                            <th class="p-3">Bài viết</th>
-                            <th class="p-3">Content type</th>
-                            <th class="p-3">Cmt gần nhất</th>
-                            <th class="p-3">Scan</th>
-                            <th class="p-3">Chi tiết</th>
-                            <th class="p-3 text-right">Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody id="linksTableBody" class="divide-y text-sm">
-                        <tr>
-                            <td class="p-3"><input type="checkbox"></td>
-                            <td class="p-3 text-xs text-gray-500">14:58:43 24/10/2026</td>
-                            <td class="p-3"><span class="bg-blue-50 text-blue-600 text-xs px-2 py-0.5 rounded font-bold">2 +1hôm nay</span></td>
-                            <td class="p-3 font-semibold"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 underline">Nhà Đẹp Miền Bắc</a></td>
-                            <td class="p-3"><span class="bg-pink-50 text-pink-600 text-xs px-2 py-0.5 rounded font-bold">Reel</span></td>
-                            <td class="p-3 text-xs text-gray-600">&lt;1 giờ trước</td>
-                            <td class="p-3"><input type="checkbox" checked class="toggle"></td>
-                            <td class="p-3"><button class="border px-2.5 py-1 rounded text-xs bg-gray-50 hover:bg-gray-100">Xem</button></td>
-                            <td class="p-3 text-right"><button class="text-red-500 text-xs hover:underline">🗑️</button></td>
-                        </tr>
-                        <tr>
-                            <td class="p-3"><input type="checkbox"></td>
-                            <td class="p-3 text-xs text-gray-500">15:44:31 16/10/2026</td>
-                            <td class="p-3"><span class="text-gray-400 text-xs font-bold">0</span></td>
-                            <td class="p-3 font-semibold"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 underline">ahomes</a></td>
-                            <td class="p-3"><span class="bg-pink-50 text-pink-600 text-xs px-2 py-0.5 rounded font-bold">Reel</span></td>
-                            <td class="p-3 text-xs text-gray-400">Chưa có</td>
-                            <td class="p-3"><input type="checkbox" checked class="toggle"></td>
-                            <td class="p-3"><button class="border px-2.5 py-1 rounded text-xs bg-gray-50 hover:bg-gray-100">Xem</button></td>
-                            <td class="p-3 text-right"><button class="text-red-500 text-xs hover:underline">🗑️</button></td>
-                        </tr>
-                        <tr>
-                            <td class="p-3"><input type="checkbox"></td>
-                            <td class="p-3 text-xs text-gray-500">21:40:18 24/09/2026</td>
-                            <td class="p-3"><span class="bg-blue-50 text-blue-600 text-xs px-2 py-0.5 rounded font-bold">11</span></td>
-                            <td class="p-3 font-semibold"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 underline">Kiến trúc Uư Việt</a></td>
-                            <td class="p-3"><span class="bg-pink-50 text-pink-600 text-xs px-2 py-0.5 rounded font-bold">Reel</span></td>
-                            <td class="p-3 text-xs text-gray-600">111 ngày trước</td>
-                            <td class="p-3"><input type="checkbox" checked class="toggle"></td>
-                            <td class="p-3"><button class="border px-2.5 py-1 rounded text-xs bg-gray-50 hover:bg-gray-100">Xem</button></td>
-                            <td class="p-3 text-right"><button class="text-red-500 text-xs hover:underline">🗑️</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="bg-white p-4 rounded-lg shadow-sm border">
+                <div class="flex justify-between items-center pb-3 border-b mb-3">
+                    <span class="text-sm font-medium text-gray-700">Tổng số bài viết: <b id="totalPostCount" class="text-blue-600">3</b></span>
+                    <div class="flex gap-4 text-sm font-medium">
+                        <span class="text-blue-600 border-b-2 border-blue-600 pb-1 cursor-pointer">Link on</span>
+                        <span class="text-gray-400 cursor-pointer hover:text-gray-600">Link off</span>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b bg-gray-50 text-xs text-gray-500 uppercase">
+                                <th class="p-3"><input type="checkbox"></th>
+                                <th class="p-3">Thời gian thêm link</th>
+                                <th class="p-3">Data</th>
+                                <th class="p-3">Bài viết</th>
+                                <th class="p-3">Content type</th>
+                                <th class="p-3">Cmt gần nhất</th>
+                                <th class="p-3">Scan</th>
+                                <th class="p-3">Chi tiết</th>
+                                <th class="p-3 text-right">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="linkTableBody" class="text-sm divide-y">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3"><input type="checkbox"></td>
+                                <td class="p-3 text-xs text-gray-500">14:58:43 24/10/2026</td>
+                                <td class="p-3"><span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded text-xs font-bold">2 +1hôm nay</span></td>
+                                <td class="p-3"><a href="https://facebook.com" target="_blank" class="text-blue-600 underline font-semibold">Nhà Đẹp Miền Bắc</a></td>
+                                <td class="p-3"><span class="bg-pink-100 text-pink-600 px-2 py-0.5 rounded text-xs font-bold">Reel</span></td>
+                                <td class="p-3 text-xs text-gray-500">&lt;1 giờ trước</td>
+                                <td class="p-3"><input type="checkbox" checked class="w-4 h-4 text-blue-600"></td>
+                                <td class="p-3"><button onclick="switchTab('comments')" class="border px-2.5 py-1 rounded text-xs font-medium hover:bg-gray-100">Xem</button></td>
+                                <td class="p-3 text-right"><button class="text-gray-400 hover:text-red-600">🗑️</button></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3"><input type="checkbox"></td>
+                                <td class="p-3 text-xs text-gray-500">15:44:31 16/10/2026</td>
+                                <td class="p-3"><span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs font-bold">0</span></td>
+                                <td class="p-3"><a href="https://facebook.com" target="_blank" class="text-blue-600 underline font-semibold">ahomes</a></td>
+                                <td class="p-3"><span class="bg-pink-100 text-pink-600 px-2 py-0.5 rounded text-xs font-bold">Reel</span></td>
+                                <td class="p-3 text-xs text-gray-500">Chưa có</td>
+                                <td class="p-3"><input type="checkbox" checked class="w-4 h-4 text-blue-600"></td>
+                                <td class="p-3"><button onclick="switchTab('comments')" class="border px-2.5 py-1 rounded text-xs font-medium hover:bg-gray-100">Xem</button></td>
+                                <td class="p-3 text-right"><button class="text-gray-400 hover:text-red-600">🗑️</button></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3"><input type="checkbox"></td>
+                                <td class="p-3 text-xs text-gray-500">21:40:18 24/09/2026</td>
+                                <td class="p-3"><span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded text-xs font-bold">11</span></td>
+                                <td class="p-3"><a href="https://facebook.com" target="_blank" class="text-blue-600 underline font-semibold">Kiến trúc Ưu Việt</a></td>
+                                <td class="p-3"><span class="bg-pink-100 text-pink-600 px-2 py-0.5 rounded text-xs font-bold">Reel</span></td>
+                                <td class="p-3 text-xs text-gray-500">111 ngày trước</td>
+                                <td class="p-3"><input type="checkbox" checked class="w-4 h-4 text-blue-600"></td>
+                                <td class="p-3"><button onclick="switchTab('comments')" class="border px-2.5 py-1 rounded text-xs font-medium hover:bg-gray-100">Xem</button></td>
+                                <td class="p-3 text-right"><button class="text-gray-400 hover:text-red-600">🗑️</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- TAB 2: COMMENTS (CHÍNH XÁC Y HỆT ẢNH MẪU CỦA ANH) -->
-        <div id="tab-comments" class="tab-content flex-1 flex flex-col overflow-y-auto">
-            <header class="bg-white border-b px-6 py-3 flex justify-between items-center shrink-0">
-                <h1 class="font-semibold text-gray-800">Comments</h1>
-                <span id="commentCount" class="text-sm text-blue-600 font-medium">4 comment</span>
+        <!-- Tab 2: Comments -->
+        <div id="tab-comments" class="tab-content hidden flex-1 flex flex-col overflow-y-auto">
+            <header class="bg-white border-b px-6 py-4 flex justify-between items-center shrink-0">
+                <h1 class="font-bold text-lg text-gray-800">Comments</h1>
+                <span id="commentCount" class="text-sm text-blue-600 font-medium bg-blue-50 px-3 py-1 rounded-full">0 comment</span>
             </header>
 
             <div class="p-6 space-y-4">
-                <!-- Thanh Google Sheet input -->
-                <div class="bg-white p-4 rounded-lg shadow-sm border space-y-2">
-                    <div class="flex gap-2">
-                        <input type="text" placeholder="Nhập link Google Sheet" class="border rounded px-3 py-1.5 text-sm flex-1 focus:outline-none focus:border-blue-500">
-                        <button class="bg-purple-600 text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-purple-700">Thêm Sheet</button>
-                    </div>
-                    <p class="text-xs text-gray-500">Bạn cần chia sẻ quyền sửa file sheet cho email <code class="bg-gray-100 px-1 py-0.5 rounded text-gray-700">vm-manager@vm-sheet.iam.gserviceaccount.com</code></p>
+                <div class="bg-white p-4 rounded-lg shadow-sm border flex items-center gap-3">
+                    <input type="text" id="inputPostName" placeholder="Tên bài viết (VD: Nhà đẹp Betoviet)..." class="border rounded px-4 py-2 text-sm flex-1 focus:outline-none focus:border-blue-500">
+                    <input type="text" id="inputCustName" placeholder="Tên khách..." class="border rounded px-3 py-2 text-sm w-40">
+                    <input type="text" id="inputCommentText" placeholder="Nội dung..." class="border rounded px-3 py-2 text-sm w-44">
+                    <input type="text" id="inputPhone" placeholder="SĐT..." class="border rounded px-3 py-2 text-sm w-32">
+                    <button onclick="addCommentReal()" class="bg-blue-600 text-white px-5 py-2 rounded text-sm font-medium hover:bg-blue-700 shrink-0">Thêm Sheet</button>
                 </div>
 
-                <!-- Thanh công cụ tìm kiếm và lọc ngày -->
-                <div class="bg-white p-3 rounded-lg shadow-sm border flex flex-wrap items-center gap-3 text-sm">
-                    <input type="text" placeholder="Tìm kiếm..." class="border rounded px-3 py-1.5 w-48 text-xs">
-                    <select class="border rounded px-2 py-1.5 text-xs text-gray-600"><option>Trạng thái</option></select>
-                    <div class="flex items-center border rounded px-2 py-1 text-xs text-gray-600 gap-1 bg-gray-50">
-                        <span>📅 2026-10-24 - 2026-10-24</span>
-                    </div>
-                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
-                        <input type="checkbox" class="rounded"> Có số điện thoại
-                    </label>
-                    <div class="ml-auto flex items-center gap-3">
-                        <button class="border px-3 py-1.5 rounded text-xs bg-gray-50 hover:bg-gray-100 font-medium">Export Data</button>
-                        <span class="text-xs text-gray-600 flex items-center gap-1">Chuông <input type="checkbox" class="toggle"></span>
-                    </div>
-                </div>
-
-                <!-- Bảng danh sách comment khớp chuẩn ảnh 1 -->
                 <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
                     <table class="w-full text-left border-collapse">
                         <thead>
@@ -157,70 +141,34 @@
                                 <th class="p-3 text-right">Hành động</th>
                             </tr>
                         </thead>
-                        <tbody id="commentTableBody" class="text-sm divide-y">
-                            <!-- Dòng 1 -->
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3"><input type="checkbox"></td>
-                                <td class="p-3 font-medium">1</td>
-                                <td class="p-3 text-xs text-gray-500">21:04:04<br>24/10/2026</td>
-                                <td class="p-3 font-semibold"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 hover:underline">Nhà đẹp Betoviet</a></td>
-                                <td class="p-3 font-medium"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 hover:underline">Thanh Trường 👤</a></td>
-                                <td class="p-3 text-gray-800">Nhà của tôi</td>
-                                <td class="p-3 text-gray-400">-</td>
-                                <td class="p-3"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded">Chưa đặt</span></td>
-                                <td class="p-3 text-right"><button class="border bg-white px-3 py-1 rounded text-xs shadow-sm hover:bg-gray-100 font-medium">🛒 Tạo đơn</button></td>
-                            </tr>
-                            <!-- Dòng 2 -->
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3"><input type="checkbox"></td>
-                                <td class="p-3 font-medium">2</td>
-                                <td class="p-3 text-xs text-gray-500">17:59:56<br>24/10/2026</td>
-                                <td class="p-3 font-semibold"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 hover:underline">Nhà Đẹp Miền Bắc</a></td>
-                                <td class="p-3 font-medium"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 hover:underline">Ngọc Than 👤</a></td>
-                                <td class="p-3 text-gray-800">Xin tư vấn</td>
-                                <td class="p-3 font-bold text-blue-600">0917751295</td>
-                                <td class="p-3"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded">Chưa đặt</span></td>
-                                <td class="p-3 text-right"><button class="border bg-white px-3 py-1 rounded text-xs shadow-sm hover:bg-gray-100 font-medium">🛒 Tạo đơn</button></td>
-                            </tr>
-                            <!-- Dòng 3 -->
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3"><input type="checkbox"></td>
-                                <td class="p-3 font-medium">3</td>
-                                <td class="p-3 text-xs text-gray-500">16:55:01<br>24/10/2026</td>
-                                <td class="p-3 font-semibold"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 hover:underline">KingHome</a></td>
-                                <td class="p-3 font-medium"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 hover:underline">HA MK 👤</a></td>
-                                <td class="p-3 text-gray-800">Ghét nhất phòng bếp gần phòng khách</td>
-                                <td class="p-3 text-gray-400">-</td>
-                                <td class="p-3"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded">Chưa đặt</span></td>
-                                <td class="p-3 text-right"><button class="border bg-white px-3 py-1 rounded text-xs shadow-sm hover:bg-gray-100 font-medium">🛒 Tạo đơn</button></td>
-                            </tr>
-                            <!-- Dòng 4 -->
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3"><input type="checkbox"></td>
-                                <td class="p-3 font-medium">4</td>
-                                <td class="p-3 text-xs text-gray-500">15:43:07<br>24/10/2026</td>
-                                <td class="p-3 font-semibold"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 hover:underline">Hoàng Anh - Nhà đẹp...</a></td>
-                                <td class="p-3 font-medium"><a href="https://www.facebook.com" target="_blank" class="text-blue-600 hover:underline">Trái Tim Xa Vời 👤</a></td>
-                                <td class="p-3 text-gray-800">lb</td>
-                                <td class="p-3 text-gray-400">-</td>
-                                <td class="p-3"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded">Chưa đặt</span></td>
-                                <td class="p-3 text-right"><button class="border bg-white px-3 py-1 rounded text-xs shadow-sm hover:bg-gray-100 font-medium">🛒 Tạo đơn</button></td>
-                            </tr>
-                        </tbody>
+                        <tbody id="commentTableBody" class="text-sm divide-y"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- Các tab phụ -->
-        <div id="tab-orders" class="tab-content hidden p-6"><header class="bg-white p-4 rounded shadow-sm"><h1 class="font-semibold text-lg">Orders</h1></header></div>
-        <div id="tab-ads" class="tab-content hidden p-6"><header class="bg-white p-4 rounded shadow-sm"><h1 class="font-semibold text-lg">Ads Library</h1></header></div>
-        <div id="tab-tai-khoan" class="tab-content hidden p-6"><header class="bg-white p-4 rounded shadow-sm"><h1 class="font-semibold text-lg">Tài khoản</h1></header></div>
-        <div id="tab-nhan-vien" class="tab-content hidden p-6"><header class="bg-white p-4 rounded shadow-sm"><h1 class="font-semibold text-lg">Quản lý nhân viên</h1></header></div>
+        <!-- Các Tab khác -->
+        <div id="tab-orders" class="tab-content hidden p-6"><h1 class="text-xl font-bold">Orders</h1></div>
+        <div id="tab-ads" class="tab-content hidden p-6"><h1 class="text-xl font-bold">Ads Library</h1></div>
+        <div id="tab-tai-khoan" class="tab-content hidden p-6"><h1 class="text-xl font-bold">Tài khoản</h1></div>
+        <div id="tab-nhan-vien" class="tab-content hidden p-6"><h1 class="text-xl font-bold">Quản lý nhân viên</h1></div>
 
     </main>
 
+    <!-- Modal Popup Thêm Bài Viết Mới chuẩn đét -->
+    <div id="addModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg w-full max-w-lg shadow-xl space-y-4">
+            <h3 class="font-bold text-lg text-gray-800">Thêm Link Bài Viết Facebook Quét Mới</h3>
+            <textarea id="modalLinkArea" rows="5" placeholder="Dán các đường dẫn URL bài viết/video Facebook vào đây (mỗi link một dòng)..." class="w-full border rounded p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeAddModal()" class="px-4 py-2 border rounded text-sm text-gray-600 hover:bg-gray-100">Hủy</button>
+                <button onclick="saveModalLinks()" class="px-4 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700">Lưu Thêm Bài Viết</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        const API_BASE_URL = 'http://localhost:3000';
         const allTabs = ['danh-sach', 'comments', 'orders', 'ads', 'tai-khoan', 'nhan-vien'];
 
         function switchTab(tabName) {
@@ -228,20 +176,107 @@
                 const el = document.getElementById('tab-' + name);
                 if(el) el.classList.add('hidden');
             });
-            const target = document.getElementById('tab-' + tabName);
-            if(target) target.classList.remove('hidden');
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
 
             allTabs.forEach(name => {
                 const btn = document.getElementById('btn-' + name);
-                if(btn) {
-                    btn.className = "w-full text-left py-1.5 px-3 rounded text-gray-600 hover:bg-gray-100 font-medium text-sm";
-                }
+                if(btn) btn.className = "w-full text-left py-2 px-3 rounded text-gray-600 hover:bg-gray-100 font-medium";
             });
             const activeBtn = document.getElementById('btn-' + tabName);
-            if(activeBtn) {
-                activeBtn.className = "w-full text-left py-1.5 px-3 rounded text-blue-600 font-semibold bg-blue-50 text-sm";
-            }
+            if(activeBtn) activeBtn.className = "w-full text-left py-2 px-3 rounded text-blue-600 font-semibold bg-blue-50";
         }
+
+        function openAddModal() {
+            document.getElementById('addModal').classList.remove('hidden');
+            document.getElementById('addModal').classList.add('flex');
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.add('hidden');
+            document.getElementById('addModal').classList.remove('flex');
+        }
+
+        async function saveModalLinks() {
+            const text = document.getElementById('modalLinkArea').value.trim();
+            if(!text) return alert('Vui lòng dán link bài viết!');
+            
+            const links = text.split('\n').filter(l => l.trim().length > 0);
+            
+            const tbody = document.getElementById('linkTableBody');
+            const nowStr = new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN');
+
+            links.forEach(url => {
+                let name = "Bài viết Facebook mới";
+                if(url.includes("betoviet")) name = "Nhà đẹp Betoviet";
+                else if(url.includes("mienbac")) name = "Nhà Đẹp Miền Bắc";
+
+                const tr = `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3"><input type="checkbox"></td>
+                        <td class="p-3 text-xs text-gray-500">${nowStr}</td>
+                        <td class="p-3"><span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded text-xs font-bold">0 +1mới</span></td>
+                        <td class="p-3"><a href="${url}" target="_blank" class="text-blue-600 underline font-semibold">${name}</a></td>
+                        <td class="p-3"><span class="bg-pink-100 text-pink-600 px-2 py-0.5 rounded text-xs font-bold">Reel</span></td>
+                        <td class="p-3 text-xs text-gray-500">Vừa xong</td>
+                        <td class="p-3"><input type="checkbox" checked class="w-4 h-4 text-blue-600"></td>
+                        <td class="p-3"><button onclick="switchTab('comments')" class="border px-2.5 py-1 rounded text-xs font-medium hover:bg-gray-100">Xem</button></td>
+                        <td class="p-3 text-right"><button class="text-gray-400 hover:text-red-600">🗑️</button></td>
+                    </tr>
+                `;
+                tbody.innerHTML = tr + tbody.innerHTML;
+            });
+
+            closeAddModal();
+            document.getElementById('modalLinkArea').value = '';
+            alert('Đã thêm link thành công!');
+        }
+
+        async function loadComments() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/comments`);
+                const data = await res.json();
+                const tbody = document.getElementById('commentTableBody');
+                document.getElementById('commentCount').innerText = data.length + " comment";
+                tbody.innerHTML = '';
+                data.forEach((item, index) => {
+                    const phoneDisplay = item.phone ? `<span class="text-blue-600 font-bold">${item.phone}</span>` : `<span class="text-gray-400">-</span>`;
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3"><input type="checkbox"></td>
+                            <td class="p-3">${index + 1}</td>
+                            <td class="p-3 text-xs text-gray-500">${item.time}</td>
+                            <td class="p-3"><a href="${item.postUrl || 'https://facebook.com'}" target="_blank" class="text-blue-600 underline font-semibold">${item.post}</a></td>
+                            <td class="p-3"><a href="${item.profileUrl || 'https://facebook.com'}" target="_blank" class="text-blue-600 underline font-semibold">${item.name} 👤</a></td>
+                            <td class="p-3">${item.comment}</td>
+                            <td class="p-3">${phoneDisplay}</td>
+                            <td class="p-3"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Chưa đặt</span></td>
+                            <td class="p-3 text-right"><button class="bg-gray-100 border px-3 py-1 rounded text-xs hover:bg-gray-200 font-medium">🛒 Tạo đơn</button></td>
+                        </tr>
+                    `;
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        async function addCommentReal() {
+            const post = document.getElementById('inputPostName').value.trim() || "Nhà đẹp Betoviet";
+            const name = document.getElementById('inputCustName').value.trim() || "Khách hàng";
+            const comment = document.getElementById('inputCommentText').value.trim() || "Quan tâm tư vấn";
+            const phone = document.getElementById('inputPhone').value.trim();
+
+            await fetch(`${API_BASE_URL}/api/add-comment`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ post, postUrl: "https://www.facebook.com", name, profileUrl: "https://www.facebook.com", comment, phone })
+            });
+
+            document.getElementById('inputPostName').value = '';
+            document.getElementById('inputCustName').value = '';
+            document.getElementById('inputCommentText').value = '';
+            document.getElementById('inputPhone').value = '';
+            loadComments();
+        }
+
+        window.onload = loadComments;
     </script>
 </body>
 </html>
