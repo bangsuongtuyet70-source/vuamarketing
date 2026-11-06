@@ -16,11 +16,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Kết nối MongoDB
+// Kiểm tra biến kết nối MongoDB
 const MONGO_URI = process.env.MONGO_URI;
 
 if (!MONGO_URI) {
-    console.error('LỖI: Chưa cấu hình biến MONGO_URI trên Render.');
+    console.error('LỖI: Chưa cấu hình MONGO_URI trên Render.');
     process.exit(1);
 }
 
@@ -47,7 +47,7 @@ function getFormattedDate() {
     return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
-// Kiểm tra trạng thái kết nối
+// API kiểm tra server và MongoDB
 app.get('/api/health', (req, res) => {
     res.json({
         server: 'running',
@@ -60,11 +60,17 @@ app.get('/api/health', (req, res) => {
 // Lấy danh sách bài viết
 app.get('/api/links', async (req, res) => {
     try {
-        const links = await Link.find().sort({ createdAt: -1, _id: -1 }).lean();
+        const links = await Link.find()
+            .sort({ createdAt: -1, _id: -1 })
+            .lean();
+
         res.json(links);
     } catch (err) {
         console.error('Lỗi lấy bài viết:', err);
-        res.status(500).json({ success: false, message: 'Không lấy được danh sách bài viết.' });
+        res.status(500).json({
+            success: false,
+            message: 'Không lấy được danh sách bài viết.'
+        });
     }
 });
 
@@ -74,7 +80,10 @@ app.post('/api/add-link', async (req, res) => {
         const { url } = req.body;
 
         if (!url || typeof url !== 'string') {
-            return res.status(400).json({ success: false, message: 'Link không hợp lệ.' });
+            return res.status(400).json({
+                success: false,
+                message: 'Link không hợp lệ.'
+            });
         }
 
         const newLink = await Link.create({
@@ -82,23 +91,31 @@ app.post('/api/add-link', async (req, res) => {
             url: url.trim(),
             postName: url.includes('betoviet')
                 ? 'Nhà đẹp Betoviet'
-                : (url.includes('mienbac') ? 'Nhà Đẹp Miền Bắc' : 'Bài viết Facebook'),
+                : (url.includes('mienbac')
+                    ? 'Nhà Đẹp Miền Bắc'
+                    : 'Bài viết Facebook'),
             contentType: 'Reel',
             dataCount: '0 +1mới',
             lastComment: 'Vừa xong',
             scan: true
         });
 
-        const links = await Link.find().sort({ createdAt: -1, _id: -1 }).lean();
+        const links = await Link.find()
+            .sort({ createdAt: -1, _id: -1 })
+            .lean();
 
         res.json({
             success: true,
             link: newLink,
             links: links
         });
+
     } catch (err) {
         console.error('Lỗi thêm bài viết:', err);
-        res.status(500).json({ success: false, message: 'Không lưu được bài viết.' });
+        res.status(500).json({
+            success: false,
+            message: 'Không lưu được bài viết.'
+        });
     }
 });
 
@@ -110,9 +127,13 @@ app.get('/api/comments', async (req, res) => {
             .lean();
 
         res.json(comments);
+
     } catch (err) {
         console.error('Lỗi lấy bình luận:', err);
-        res.status(500).json({ success: false, message: 'Không lấy được bình luận.' });
+        res.status(500).json({
+            success: false,
+            message: 'Không lấy được bình luận.'
+        });
     }
 });
 
@@ -142,17 +163,21 @@ app.post('/api/add-comment', async (req, res) => {
             success: true,
             comment: newComment
         });
+
     } catch (err) {
         console.error('Lỗi thêm bình luận:', err);
-        res.status(500).json({ success: false, message: 'Không lưu được bình luận.' });
+        res.status(500).json({
+            success: false,
+            message: 'Không lưu được bình luận.'
+        });
     }
 });
 
-// Kết nối MongoDB trước khi chạy server
+// Khởi động server sau khi kết nối MongoDB thành công
 async function startServer() {
     try {
         await mongoose.connect(MONGO_URI, {
-            serverSelectionTimeoutMS: 10000
+            serverSelectionTimeoutMS: 15000
         });
 
         console.log('Đã kết nối MongoDB thành công!');
@@ -161,6 +186,7 @@ async function startServer() {
         app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server đang chạy tại port ${PORT}`);
         });
+
     } catch (err) {
         console.error('Không thể kết nối MongoDB:', err.message);
         process.exit(1);
