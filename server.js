@@ -8,6 +8,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+// Hiển thị giao diện website khi truy cập trang chủ
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+const DATA_FILE = path.join(__dirname, 'database.json');
 
 const DATA_FILE = path.join(__dirname, 'database.json');
 
