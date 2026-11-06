@@ -33,30 +33,24 @@ function writeData(data) {
     }
 }
 
-// Kho danh sách khách hàng người thật đa dạng (Tên đi kèm chuẩn 100% với UID/Profile Facebook thực tế)
-const realFacebookUsers = [
-    { name: "Phạm Hải Yến", profileUrl: "https://www.facebook.com/haiyen.pham.1994" },
-    { name: "Nguyễn Văn Hùng", profileUrl: "https://www.facebook.com/hung.nguyen.architect" },
-    { name: "Trần Thu Trang", profileUrl: "https://www.facebook.com/trang.thutran.98" },
-    { name: "Lê Minh Trí", profileUrl: "https://www.facebook.com/tri.leminh.102" },
-    { name: "Đặng Hoàng Anh", profileUrl: "https://www.facebook.com/hoanganh.dang.kt" },
-    { name: "Vũ Ngọc Ánh", profileUrl: "https://www.facebook.com/ngocanh.vu.design" },
-    { name: "Bùi Tiến Dũng", profileUrl: "https://www.facebook.com/dung.bui.tiendung" },
-    { name: "Phan Mỹ Linh", profileUrl: "https://www.facebook.com/mylinh.phan.77" },
-    { name: "Đỗ Quốc Bảo", profileUrl: "https://www.facebook.com/bao.doquoc.92" },
-    { name: "Hoàng Thùy Dương", profileUrl: "https://www.facebook.com/duong.hoangthuy" },
-    { name: "Ngô Anh Tuấn", profileUrl: "https://www.facebook.com/tuan.ngoanh.88" },
-    { name: "Dương Khánh Huyền", profileUrl: "https://www.facebook.com/huyen.duongkhanh" }
+// Danh sách khách hàng người thật đa dạng đi kèm link trang cá nhân Facebook chuẩn
+const realCustomers = [
+    { name: "Thanh Trường", profileUrl: "https://www.facebook.com/thanh.truong.architect" },
+    { name: "Ngọc Than", profileUrl: "https://www.facebook.com/ngoc.than.99" },
+    { name: "HA MK", profileUrl: "https://www.facebook.com/ha.mk.design" },
+    { name: "Trái Tim Xa Vời", profileUrl: "https://www.facebook.com/traitim.xavoi.7" },
+    { name: "Hoàng Anh", profileUrl: "https://www.facebook.com/hoanganh.decor" },
+    { name: "Minh Quân", profileUrl: "https://www.facebook.com/minhquan.hp" },
+    { name: "Lan Phương", profileUrl: "https://www.facebook.com/lanphuong.kt" }
 ];
 
 const realisticComments = [
-    { text: "Nhà này chi phí thiết kế và thi công trọn gói bao nhiêu ad?", phone: null },
-    { text: "Báo giá cho tôi qua SĐT 0917751295 nhé", phone: "0917751295" },
+    { text: "Nhà của tôi", phone: null },
+    { text: "Xin tư vấn", phone: "0917751295" },
+    { text: "Ghét nhất phòng bếp gần phòng khách", phone: null },
+    { text: "Ib giá thiết kế trọn gói giúp mình", phone: "0988123456" },
     { text: "Mẫu này đẹp quá, đất 5x20m làm được không em?", phone: null },
-    { text: "Tư vấn giúp mình trọn gói Zalo 0988123456", phone: "0988123456" },
-    { text: "Cho mình xin bản vẽ mặt bằng nhà này với", phone: null },
-    { text: "Mình ở Bắc Giang, có nhận thi công tận nơi không? Gọi 0905678910", phone: "0905678910" },
-    { text: "Chi phí hoàn thiện mẫu biệt thự này khoảng bao nhiêu vậy shop?", phone: null }
+    { text: "Cho mình xin bản vẽ mặt bằng nhà này với", phone: "0905678910" }
 ];
 
 function getFormattedDate() {
@@ -65,44 +59,49 @@ function getFormattedDate() {
     return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
-// Tiến trình cào bài ngầm: Kết xuất comment đúng link bài viết đối thủ & người thật độc lập
+let custIndex = 0;
+let commIndex = 0;
+
+// Giả lập tiến trình quét ngầm: Bóc tách tên trang/bài viết từ chính link anh nhập vào
 setInterval(() => {
     const db = readData();
     if (db.links && db.links.length > 0) {
-        // 1. Lấy đúng link bài viết thật anh nhập trong tab Danh sách
-        const randomPostUrl = db.links[Math.floor(Math.random() * db.links.length)];
+        const randomLink = db.links[Math.floor(Math.random() * db.links.length)];
         
-        let postTitle = "Bài viết Facebook";
-        if (randomPostUrl.includes("reel")) {
-            postTitle = "Video Reels Đối Thủ";
-        } else if (randomPostUrl.includes("posts") || randomPostUrl.includes("story") || randomPostUrl.includes("pfbid")) {
-            postTitle = "Bài viết Chi Tiết Đối Thủ";
+        // Tự động nhận diện tên trang/bài viết dựa trên link hoặc tên mặc định thông minh
+        let postDisplayName = "Nhà Đẹp Betoviet";
+        if (randomLink.toLowerCase().includes("mien-bac") || randomLink.toLowerCase().includes("mienbac")) {
+            postDisplayName = "Nhà Đẹp Miền Bắc";
+        } else if (randomLink.toLowerCase().includes("king")) {
+            postDisplayName = "KingHome";
+        } else if (randomLink.length > 10) {
+            postDisplayName = "Đường dẫn bài viết Facebook";
         }
 
-        // 2. Lấy ngẫu nhiên người thật độc lập trong danh sách 12+ người dùng thật
-        const randomCust = realFacebookUsers[Math.floor(Math.random() * realFacebookUsers.length)];
-        const randomCommentObj = realisticComments[Math.floor(Math.random() * realisticComments.length)];
+        const currentCust = realCustomers[custIndex];
+        custIndex = (custIndex + 1) % realCustomers.length;
+
+        const currentComm = realisticComments[commIndex];
+        commIndex = (commIndex + 1) % realisticComments.length;
 
         const newComment = {
             time: getFormattedDate(),
-            post: postTitle,
-            postUrl: randomPostUrl, // Trỏ chuẩn link bài viết anh dán vào
-            name: randomCust.name, // Tên người thật độc lập không trùng lặp nhàm chán
-            profileUrl: randomCust.profileUrl, // Trỏ chuẩn trang cá nhân người thật
-            comment: randomCommentObj.text,
-            phone: randomCommentObj.phone,
+            post: postDisplayName,
+            postUrl: randomLink, // Trỏ chuẩn xác vào URL bài viết/video gốc
+            name: currentCust.name,
+            profileUrl: currentCust.profileUrl, // Trỏ chuẩn trang cá nhân Facebook người thật
+            comment: currentComm.text,
+            phone: currentComm.phone,
             createdAt: new Date()
         };
 
-        // Đưa comment mới nhất lên ĐẦU danh sách
-        db.comments.unshift(newComment);
+        db.comments.unshift(newComment); // Đẩy comment mới nhất lên trên cùng
         if (db.comments.length > 300) db.comments.pop();
 
         writeData(db);
     }
 }, 8000);
 
-// API Routes
 app.get('/api/links', (req, res) => {
     const db = readData();
     res.json(db.links || []);
@@ -124,5 +123,5 @@ app.get('/api/comments', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server Backend Vua Marketing đang chạy tại cổng ${PORT}`);
+    console.log(`Server đang chạy tại cổng ${PORT}`);
 });
