@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 
 const DATA_FILE = path.join(__dirname, 'database.json');
 
-const DATA_FILE = path.join(__dirname, 'database.json');
+
 
 function readData() {
     try {
