@@ -8,20 +8,24 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// 📌 1. KẾT NỐI MONGODB ATLAS (Đã gán trực tiếp chuỗi kết nối chính xác)
+// Chuỗi kết nối chuẩn của bạn
 const MONGO_URI = "mongodb+srv://bangsuongtuyet70_db_user:Abc123456@cluster0.et2wb6o.mongodb.net/vua_marketing?retryWrites=true&w=majority";
 
+let isConnected = false;
+
+// Kết nối MongoDB với cờ kiểm soát an toàn
 mongoose.connect(MONGO_URI, {
-    serverSelectionTimeoutMS: 10000,
+    serverSelectionTimeoutMS: 15000,
 })
 .then(() => {
+    isConnected = true;
     console.log('✅ Đã kết nối thành công tới Database MongoDB Atlas!');
 })
 .catch(err => {
     console.error('❌ Lỗi kết nối MongoDB:', err.message);
 });
 
-// 📌 2. ĐỊNH NGHĨA CẤU TRÚC LƯU TRỮ (SCHEMA)
+// Định nghĩa Schema
 const LinkSchema = new mongoose.Schema({ url: String });
 const CommentSchema = new mongoose.Schema({
     time: String,
@@ -35,7 +39,6 @@ const CommentSchema = new mongoose.Schema({
 const LinkModel = mongoose.model('Link', LinkSchema);
 const CommentModel = mongoose.model('Comment', CommentSchema);
 
-// Dữ liệu mẫu để hệ thống tự động chạy ngầm mô phỏng tương tác
 const samplePosts = [
     "Nhà đẹp Betoviet", "Nhà Đẹp Miền Bắc", "Thiết Kế Biệt Thự Neoclassic", 
     "Kiến Trúc Nhà Á Châu", "Mẫu Biệt Thự VIP", "Nhà Mái Thái Hiện Đại"
@@ -63,8 +66,9 @@ function getFormattedDate() {
     return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
-// 📌 3. CHẠY NGẦM TRÊN SERVER: Cứ 10 giây tự cào/sinh comment mới và lưu thẳng vào Database
+// Chạy ngầm an toàn: Chỉ chạy khi biến isConnected = true
 setInterval(async () => {
+    if (!isConnected) return; // Chưa kết nối thì bỏ qua, không gây lỗi timeout
     try {
         const totalLinks = await LinkModel.countDocuments();
         if (totalLinks > 0) {
@@ -85,11 +89,9 @@ setInterval(async () => {
     } catch (err) {
         console.error("Lỗi tiến trình chạy ngầm:", err);
     }
-}, 10000); // 10 giây
+}, 10000);
 
-// 📌 4. CÁC API HOẠT ĐỘNG CHÍNH
-
-// Lấy danh sách link từ Database
+// Các API chính
 app.get('/api/links', async (req, res) => {
     try {
         const links = await LinkModel.find();
@@ -99,14 +101,13 @@ app.get('/api/links', async (req, res) => {
     }
 });
 
-// Thêm / Lưu danh sách link (Xóa link cũ, ghi nhận danh sách link mới)
 app.post('/api/add-links', async (req, res) => {
     try {
         const { links } = req.body;
         if (links && Array.isArray(links)) {
-            await LinkModel.deleteMany({}); // Xóa dữ liệu cũ
+            await LinkModel.deleteMany({});
             const linkDocs = links.map(url => ({ url }));
-            await LinkModel.insertMany(linkDocs); // Lưu danh sách mới
+            await LinkModel.insertMany(linkDocs);
         }
         const count = await LinkModel.countDocuments();
         res.json({ success: true, totalLinks: count });
@@ -115,7 +116,6 @@ app.post('/api/add-links', async (req, res) => {
     }
 });
 
-// Lấy danh sách bình luận (Sắp xếp mới nhất lên đầu, giới hạn tối đa 300 comment gần nhất)
 app.get('/api/comments', async (req, res) => {
     try {
         const comments = await CommentModel.find().sort({ createdAt: -1 }).limit(300);
@@ -125,7 +125,6 @@ app.get('/api/comments', async (req, res) => {
     }
 });
 
-// Lưu cấu hình token
 let savedConfig = { token: '' };
 app.post('/api/save-config', (req, res) => {
     const { token } = req.body;
