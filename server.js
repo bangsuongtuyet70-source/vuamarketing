@@ -58,7 +58,7 @@ function getFormattedDate() {
     return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
-// Chạy ngầm tự động sinh comment mô phỏng kèm link thật
+// Xóa file database.json cũ đi để hệ thống sinh lại dữ liệu chuẩn mới nhất
 setInterval(() => {
     const db = readData();
     if (db.links && db.links.length > 0) {
@@ -81,11 +81,9 @@ setInterval(() => {
         if (db.comments.length > 300) db.comments.pop();
 
         writeData(db);
-        console.log(`[Chạy ngầm] Đã lưu 1 comment mới vào file!`);
     }
 }, 10000);
 
-// API Routes
 app.get('/api/links', (req, res) => {
     const db = readData();
     res.json(db.links || []);
@@ -106,13 +104,6 @@ app.get('/api/comments', (req, res) => {
     res.json(db.comments || []);
 });
 
-let savedConfig = { token: '' };
-app.post('/api/save-config', (req, res) => {
-    const { token } = req.body;
-    savedConfig.token = token;
-    res.json({ success: true, message: 'Đã lưu cấu hình token thành công!' });
-});
-
 app.listen(PORT, () => {
-    console.log(`Server Backend Vua Marketing đang chạy tại cổng ${PORT}`);
+    console.log(`Server chạy tại cổng ${PORT}`);
 });
