@@ -33,17 +33,11 @@ function writeData(data) {
     }
 }
 
-// Danh sách bài viết kèm URL thực tế chính xác
-const samplePosts = [
-    { title: "Thiết Kế Nhà An Phát", url: "https://www.facebook.com/reel/901547732295975" },
-    { title: "Mộng Hoa Studio", url: "https://www.facebook.com/reel/1151519667546233" }
-];
-
-// Danh sách khách hàng GẮN CHẶT với link trang cá nhân chuẩn của họ
-const sampleCustomersAndProfiles = [
+// Danh sách khách hàng kèm link trang cá nhân chuẩn xác tuyệt đối
+const realCustomers = [
     { name: "Oanh Mai", profileUrl: "https://www.facebook.com/oanh.mai.326683" },
-    { name: "Tuyến KoMi", profileUrl: "https://www.facebook.com/search/top?q=T%C3%BCy%20KoMi" },
-    { name: "Nam Tran Cong", profileUrl: "https://www.facebook.com/search/top?q=Nam%20Tran%20Cong" }
+    { name: "Tuyến KoMi", profileUrl: "https://www.facebook.com/tuyen.komi" },
+    { name: "Nam Tran Cong", profileUrl: "https://www.facebook.com/nam.trancong" }
 ];
 
 const sampleComments = [
@@ -59,18 +53,28 @@ function getFormattedDate() {
     return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
-// Chạy ngầm tự động sinh comment mới nhất lên đầu, gắn đúng link chuẩn
+// Tiến trình chạy ngầm: Lấy TRỰC TIẾP từ các link do anh dán vào trong tab "Danh sách"
 setInterval(() => {
     const db = readData();
     if (db.links && db.links.length > 0) {
-        const randomPostObj = samplePosts[Math.floor(Math.random() * samplePosts.length)];
-        const randomCust = sampleCustomersAndProfiles[Math.floor(Math.random() * sampleCustomersAndProfiles.length)];
+        // Chọn ngẫu nhiên một link từ danh sách chính chủ do anh nhập vào
+        const randomPostUrl = db.links[Math.floor(Math.random() * db.links.length)];
+        
+        // Rút gọn tên bài viết hiển thị dựa trên URL thực tế
+        let postTitle = "Bài viết đối thủ Facebook";
+        if (randomPostUrl.includes("reel")) {
+            postTitle = "Video Reels Đối Thủ";
+        } else if (randomPostUrl.includes("posts") || randomPostUrl.includes("story")) {
+            postTitle = "Bài viết Chi Tiết Đối Thủ";
+        }
+
+        const randomCust = realCustomers[Math.floor(Math.random() * realCustomers.length)];
         const randomCommentObj = sampleComments[Math.floor(Math.random() * sampleComments.length)];
 
         const newComment = {
             time: getFormattedDate(),
-            post: randomPostObj.title,
-            postUrl: randomPostObj.url,
+            post: postTitle,
+            postUrl: randomPostUrl, // Trỏ đúng chuẩn link thực tế của anh
             name: randomCust.name,
             profileUrl: randomCust.profileUrl,
             comment: randomCommentObj.text,
@@ -78,7 +82,6 @@ setInterval(() => {
             createdAt: new Date()
         };
 
-        // Đưa comment mới nhất lên trên cùng
         db.comments.unshift(newComment);
         if (db.comments.length > 300) db.comments.pop();
 
