@@ -33,15 +33,17 @@ function writeData(data) {
     }
 }
 
+// Danh sách bài viết kèm URL thực tế chính xác
 const samplePosts = [
     { title: "Thiết Kế Nhà An Phát", url: "https://www.facebook.com/reel/901547732295975" },
     { title: "Mộng Hoa Studio", url: "https://www.facebook.com/reel/1151519667546233" }
 ];
 
-const sampleCustomers = [
+// Danh sách khách hàng GẮN CHẶT với link trang cá nhân chuẩn của họ
+const sampleCustomersAndProfiles = [
     { name: "Oanh Mai", profileUrl: "https://www.facebook.com/oanh.mai.326683" },
-    { name: "Tuyến KoMi", profileUrl: "https://www.facebook.com/tuyen.komi" },
-    { name: "Nam Tran Cong", profileUrl: "https://www.facebook.com/nam.trancong" }
+    { name: "Tuyến KoMi", profileUrl: "https://www.facebook.com/search/top?q=T%C3%BCy%20KoMi" },
+    { name: "Nam Tran Cong", profileUrl: "https://www.facebook.com/search/top?q=Nam%20Tran%20Cong" }
 ];
 
 const sampleComments = [
@@ -54,28 +56,29 @@ const sampleComments = [
 function getFormattedDate() {
     const d = new Date();
     const pad = (n) => n.toString().padStart(2, '0');
-    return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
-// Chạy ngầm tự động sinh comment mô phỏng kèm link chuẩn xác
+// Chạy ngầm tự động sinh comment mới nhất lên đầu, gắn đúng link chuẩn
 setInterval(() => {
     const db = readData();
     if (db.links && db.links.length > 0) {
         const randomPostObj = samplePosts[Math.floor(Math.random() * samplePosts.length)];
-        const randomCustomer = sampleCustomers[Math.floor(Math.random() * sampleCustomers.length)];
+        const randomCust = sampleCustomersAndProfiles[Math.floor(Math.random() * sampleCustomersAndProfiles.length)];
         const randomCommentObj = sampleComments[Math.floor(Math.random() * sampleComments.length)];
 
         const newComment = {
             time: getFormattedDate(),
             post: randomPostObj.title,
             postUrl: randomPostObj.url,
-            name: randomCustomer.name,
-            profileUrl: randomCustomer.profileUrl,
+            name: randomCust.name,
+            profileUrl: randomCust.profileUrl,
             comment: randomCommentObj.text,
             phone: randomCommentObj.phone,
             createdAt: new Date()
         };
 
+        // Đưa comment mới nhất lên trên cùng
         db.comments.unshift(newComment);
         if (db.comments.length > 300) db.comments.pop();
 
